@@ -116,6 +116,12 @@ def main():
         while run:
             clock.tick(60)#60 fps
             
+            if sorting:
+                try:
+                    next(sorting_algorithm_generator)
+                except StopIteration:
+                    sorting = False
+            
             draw(draw_info)
             
             
