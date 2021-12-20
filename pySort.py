@@ -15,7 +15,8 @@ class DrawInfo:
         (160, 160, 160),
         (192, 192, 192)
     ]
-    
+    FONT = pygame.font.SysFont('verdana', 30)
+    LARGE_FONT = pygame.font.SysFont('verdana', 40)
     SIDE_PAD  = 100
     TOP_PAD = 150
 
@@ -38,6 +39,8 @@ class DrawInfo:
 
 def draw(draw_info):
         draw_info.window.fill(draw_info.BACKGROUND_COLOR)
+        controls = draw_info.FONT.render("R - Reset | SPACE - Start Sorting | A - Ascending | D - Descending", 1, draw_info.BLACK)
+        draw_info.window.blit(controls, (draw_info.width/2 - controls.get_width()/2 , 45))
         draw_list(draw_info)
         pygame.display.update()
      
@@ -50,7 +53,7 @@ def draw_list(draw_info):
             color = draw_info.GRADIENTS[i % 3]#remiander always 0,1 or 3 - 3 different colors of grey elements
             pygame.draw.react(draw_info.window, color, (x,y,draw_info.block_width,draw_info.height))
     
-    def generate_starting_list(n, min_val, max_val):
+def generate_starting_list(n, min_val, max_val):
         lst = []
 
         for _ in range(n):
@@ -59,7 +62,7 @@ def draw_list(draw_info):
 
         return lst
 
-    def main():
+def main():
         run = True
         clock = pygame.time.Clock()
 
@@ -88,12 +91,12 @@ def draw_list(draw_info):
                 if event.key == pygame.K_r:
                     lst = generate_starting_list(n, min_val, max_val)
                     draw_info.set_list(lst)
-                    sorting = Flase
-                elif event.key = pygame.K_SPACE and sorting==False :
+                    sorting = False
+                elif event.key == pygame.K_SPACE and sorting == False:
                     sorting = True
-                elif event.key = pygame.K_a and not sorting:
+                elif event.key == pygame.K_a and not sorting:
                     ascending = True
-                elif event.key = pygame.K_d and not sorting:
+                elif event.key == pygame.K_d and not sorting:
                     ascending = False
 
         pygame.quit()
