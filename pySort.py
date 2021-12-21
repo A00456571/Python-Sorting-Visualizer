@@ -33,17 +33,20 @@ class DrawInfo:
         self.max_val = max(lst)
         self.min_val = min(lst)
         self.block_width = round((self.width - self.SIDE_PAD) / len(lst))
-        self.block_height = round((self.height - self.TOP_PAD)/(self.max_val - self.min_val))
+        self.block_height = math.floor((self.height - self.TOP_PAD)/(self.max_val - self.min_val))
         self.start_x = self.SIDE_PAD //2 #wholenumber
 
-def draw(draw_info):
+def draw(draw_info, algo_name,ascending):
         draw_info.window.fill(draw_info.BACKGROUND_COLOR)
+        
+        title = draw_info.LARGE_FONT.render(f"{algo_name} - {'Ascending' if ascending else 'Descending'}", 1, draw_info.GREEN)
+        draw_info.window.blit(title, (draw_info.width/2 - title.get_width()/2 , 5))
         
         controls = draw_info.FONT.render("R - Reset | SPACE - Start Sorting | A - Ascending | D - Descending", 1, draw_info.BLACK)
         draw_info.window.blit(controls, (draw_info.width/2 - controls.get_width()/2 , 45))
         
         sorting = draw_info.FONT.render("I - Insertion Sort | B - Bubble Sort", 1, draw_info.BLACK)
-        draw_info.window.blit(sorting, (draw_info.width/2 - sorting.get_width()/2 , 35))
+        draw_info.window.blit(sorting, (draw_info.width/2 - sorting.get_width()/2 , 75))
         
         draw_list(draw_info)
         pygame.display.update()
@@ -52,7 +55,7 @@ def draw_list(draw_info, color_positions={}, clear_bg = False):
         lst = draw_info.lst
         
         if clear_bg:
-            clear_rect = (draw_info.SIDE_PAD//2, draw_info.TOP_PAD, draw_info.width - dra_info.SIDE_PAD, draw_info.height - draw_info.TOP_PAD)
+            clear_rect = (draw_info.SIDE_PAD//2, draw_info.TOP_PAD, draw_info.width - draw_info.SIDE_PAD, draw_info.height - draw_info.TOP_PAD)
             pygame.draw.rect(draw_info.window, draw_info.BACKGROUND_COLOR, clear_rect)
         
         for i, val in enumerate(lst):
@@ -92,6 +95,28 @@ def bubble_sort(draw_info, ascending=True):
     
     return lst
 
+def insertion_sort(draw_info, ascending=True):
+	lst = draw_info.lst
+
+	for i in range(1, len(lst)):
+		current = lst[i]
+
+		while True:
+			ascending_sort = i > 0 and lst[i - 1] > current and ascending
+			descending_sort = i > 0 and lst[i - 1] < current and not ascending
+
+			if not ascending_sort and not descending_sort:
+				break
+
+			lst[i] = lst[i - 1]
+			i = i - 1
+			lst[i] = current
+			draw_list(draw_info, {i - 1: draw_info.GREEN, i: draw_info.RED}, True)
+			yield True
+
+	return lst
+
+
 def main():
         run = True
         clock = pygame.time.Clock()
@@ -122,7 +147,8 @@ def main():
                 except StopIteration:
                     sorting = False
             
-            draw(draw_info)
+            else:
+                draw(draw_info, sorting_algo_name, ascending)
             
             
             for event in pygame.event.get():
