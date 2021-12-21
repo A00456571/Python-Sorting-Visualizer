@@ -142,13 +142,13 @@ def main():
             clock.tick(60)#60 fps
             
             if sorting:
-                try:
-                    next(sorting_algorithm_generator)
-                except StopIteration:
-                    sorting = False
+                    try:
+                        next(sorting_algorithm_generator)
+                    except StopIteration:
+                            sorting = False
             
             else:
-                draw(draw_info, sorting_algo_name, ascending)
+                    draw(draw_info, sorting_algo_name, ascending)
             
             
             for event in pygame.event.get():
@@ -162,13 +162,21 @@ def main():
                     lst = generate_starting_list(n, min_val, max_val)
                     draw_info.set_list(lst)
                     sorting = False
+                    
                 elif event.key == pygame.K_SPACE and sorting == False:
                     sorting = True
                     sorting_algorithm_generator = sorting_algorithm(draw_info, ascending)
+                    
                 elif event.key == pygame.K_a and not sorting:
                     ascending = True
                 elif event.key == pygame.K_d and not sorting:
                     ascending = False
+                elif event.key == pygame.K_i and not sorting:
+                    sorting_algorithm = insertion_sort
+                    sorting_algo_name = "Insertion Sort"
+                elif event.key == pygame.K_b and not sorting:
+                    sorting_algorithm = bubble_sort
+                    sorting_algo_name = "Bubble Sort"
 
         pygame.quit()
 
